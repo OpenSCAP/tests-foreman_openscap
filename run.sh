@@ -4,7 +4,9 @@ set -e -o pipefail
 
 source ./lib.sh
 
-ghdir="~/data/redhat/git/hub"
+ghdir="/tmp/github"
+mkdir -p $ghdir
+
 vmname=foreman17test
 host=${vmname}.local.lan
 
