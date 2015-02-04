@@ -6,7 +6,7 @@ ghdir="~/data/redhat/git/hub"
 vmname=foreman17test
 
 function local_requires(){
-	for pkg in virt-install libguestfs-tools-c rubygems do
+	for pkg in virt-install libguestfs-tools-c rubygems puppet do
 		rpm -q --quiet $pkg || yum install -y $pkg
 	done
 }
@@ -106,13 +106,28 @@ function deploy_smart_proxy_openscap(){
 	ssh root@$server '
 		service foreman-proxy restart
 		'
+	popd
 }
 
 function deploy_foreman_scap_client(){
 	local project=foreman_scap_client
 	local server=$1
+	pushd $ghdir/$project
 	copy_gem_to $project $server
 	build_and_deploy $project $server
+	popd
+}
+
+function deploy_puppet_foreman_scap_client(){
+	local project="puppet-foreman_scap_client"
+	local server=$1
+	pushd $ghdir/$project
+	puppet module build .
+	ssh root@$server 'mkdir '$project
+	scp -r $project-*.gem root@$server:$project/
+	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
+	build_and_deploy $project $server
+	popd
 }
 
 local_requires
@@ -122,7 +137,6 @@ deploy_rubygem_openscap
 deploy_scaptimony $host
 deploy_foreman_openscap $host
 deploy_smart_proxy_openscap $host
-deploy_foreman_scap_client
+deploy_foreman_scap_client $host
+deploy_puppet_foreman_scap_client $host
 
-cd ../puppet-foreman_scap_client
-./deploy
