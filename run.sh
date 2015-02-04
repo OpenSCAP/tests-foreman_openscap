@@ -96,6 +96,7 @@ function deploy_foreman_openscap(){
 function deploy_smart_proxy_openscap(){
 	local project=smart_proxy_openscap
 	local server=$1
+	pushd $ghdir/$project
 	copy_gem_to $project $server
 	ssh root@$server '
 		   (rpm -q ruby193-rubygems-devel && yum remove -y ruby193-rubygems-devel) \
@@ -107,6 +108,13 @@ function deploy_smart_proxy_openscap(){
 		'
 }
 
+function deploy_foreman_scap_client(){
+	local project=foreman_scap_client
+	local server=$1
+	copy_gem_to $project $server
+	build_and_deploy $project $server
+}
+
 local_requires
 deploy_foreman17
 patch_foreman17
@@ -114,8 +122,7 @@ deploy_rubygem_openscap
 deploy_scaptimony $host
 deploy_foreman_openscap $host
 deploy_smart_proxy_openscap $host
+deploy_foreman_scap_client
 
-cd ../foreman_scap_client
-./deploy $host
 cd ../puppet-foreman_scap_client
 ./deploy
