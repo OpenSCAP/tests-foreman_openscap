@@ -14,6 +14,14 @@ function deploy_foreman17(){
 	ssh root@host 'tail -f virt-sysprep-firstboot.log | grep "collect important logs"'
 }
 
+function patch_foreman17(){
+	scp $ghdir/theforeman/foreman/0001-Fixes-8052-allows-erb-in-array-and-hash-params.patch root@$host:
+	ssh root@$host '
+		cd ~foreman \
+		&& patch -p1 ~/0001*
+		'
+}
+
 function deploy_rubygem_openscap(){
 	ssh root@$host '
 		cd /etc/yum.repos.d/ \
@@ -23,13 +31,9 @@ function deploy_rubygem_openscap(){
 }
 
 deploy_foreman17
+patch_foreman17
 deploy_rubygem_openscap
 
-scp $ghdir/theforeman/foreman/0001-Fixes-8052-allows-erb-in-array-and-hash-params.patch root@$host:
-ssh root@$host '
-	cd ~foreman \
-	&& patch -p1 ~/0001*
-	'
 cd $ghdir/scaptimony
 ./deploy $host
 cd ../foreman_openscap
