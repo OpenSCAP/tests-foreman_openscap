@@ -43,7 +43,10 @@ function deploy_foreman17_wait(){
 }
 
 function patch_foreman17(){
-	scp $ghdir/theforeman/foreman/0001-Fixes-8052-allows-erb-in-array-and-hash-params.patch root@$host:
+	pushd $ghdir/theforeman/foreman/
+	git format-patch f8a56f5bd809305080e4^..f8a56f5bd809305080e4
+	scp $ghdir/theforeman/foreman/0001* root@$host:
+	popd
 	ssh root@$host '
 		cd ~foreman \
 		&& patch -p1 ~/0001*
