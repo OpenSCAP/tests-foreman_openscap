@@ -35,14 +35,9 @@ function deploy_rubygem_openscap(){
 		'
 }
 
-function deploy_scaptimony(){
-	local project=scaptimony
-	local server=$1
-	pushd $ghdir/$project
-	gem build $project.gemspec
-	ssh root@$server 'mkdir '$project
-	scp -r $project-*.gem root@$server:$project/
-	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
+function build_and_deploy_scl(){
+	local project=$1
+	local server=$2
 	ssh root@$server '
                    (rpm -q scl-utils || yum install -y scl-utils) \
                 ;  (rpm -q scl-utils-build || yum install -y scl-utils scl-utils-build) \
@@ -52,6 +47,17 @@ function deploy_scaptimony(){
 		&& rpmbuild  --define "_sourcedir `pwd`" --define "scl ruby193" -ba rubygem-'${project}'.spec \
 		&& rpm -Uvh --force ~/rpmbuild/RPMS/noarch/ruby193-rubygem-'$project'*.noarch.rpm
 		'
+}
+
+function deploy_scaptimony(){
+	local project=scaptimony
+	local server=$1
+	pushd $ghdir/$project
+	gem build $project.gemspec
+	ssh root@$server 'mkdir '$project
+	scp -r $project-*.gem root@$server:$project/
+	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
+	build_and_deploy_scl $project $server
 }
 
 local_requires
