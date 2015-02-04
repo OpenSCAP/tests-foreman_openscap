@@ -49,15 +49,22 @@ function build_and_deploy_scl(){
 		'
 }
 
-function deploy_scaptimony(){
-	local project=scaptimony
-	local server=$1
-	pushd $ghdir/$project
+function copy_gem_to(){
+	local project=$1
+	local server=$2
 	gem build $project.gemspec
 	ssh root@$server 'mkdir '$project
 	scp -r $project-*.gem root@$server:$project/
 	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
+}
+
+function deploy_scaptimony(){
+	local project=scaptimony
+	local server=$1
+	pushd $ghdir/$project
+	copy_gem_to $project $server
 	build_and_deploy_scl $project $server
+	popd
 }
 
 local_requires
