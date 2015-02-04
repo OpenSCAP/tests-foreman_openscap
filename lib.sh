@@ -36,6 +36,7 @@ function build_and_deploy(){
 	ssh root@$server '
 		   cd '$project' \
 		&& rm -rf ~/rpmbuild \
+		&& yum-builddep -y rubygem-'$project'.spec \
 		&& rpmbuild  --define "_sourcedir `pwd`" -ba rubygem-'$project'.spec \
 		&& rpm -Uvh --force ~/rpmbuild/RPMS/noarch/rubygem-'$project'-*.noarch.rpm
 		'
@@ -94,8 +95,7 @@ function deploy_smart_proxy_openscap(){
 	pushd $ghdir/openscap/$project
 	copy_gem_to $project $server
 	ssh root@$server '
-		   (rpm -q ruby193-rubygems-devel && yum remove -y ruby193-rubygems-devel) \
-		&& yum-builddep -y ~/'$project'/rubygem-'$project'.spec
+		   (rpm -q ruby193-rubygems-devel && yum remove -y ruby193-rubygems-devel)
 		'
 	build_and_deploy $project $server
 	ssh root@$server '
