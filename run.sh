@@ -67,14 +67,28 @@ function deploy_scaptimony(){
 	popd
 }
 
+function deploy_foreman_openscap(){
+	local project=foreman_openscap
+	local server=$1
+	pushd $ghdir/$project
+	copy_get_to $project
+	ssh root@$server '
+		(rpm -q foreman-assets || yum install -y foreman-assets)
+		'
+	build_and_deploy_scl $project $server
+	ssh root@$server '
+		service foreman restart
+		'
+	popd
+}
+
 local_requires
 deploy_foreman17
 patch_foreman17
 deploy_rubygem_openscap
 deploy_scaptimony $host
+deploy_foreman_openscap $host
 
-cd ../foreman_openscap
-./deploy $host
 cd ../smart_proxy_openscap
 ./deploy $host
 cd ../foreman_scap_client
