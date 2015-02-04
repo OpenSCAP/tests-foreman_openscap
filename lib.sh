@@ -80,7 +80,8 @@ function deploy_foreman_openscap(){
 	pushd $ghdir/openscap/$project
 	copy_gem_to $project $server
 	ssh root@$server '
-		(rpm -q foreman-assets || yum install -y foreman-assets)
+		   (rpm -q foreman-assets || yum install -y foreman-assets) \
+		&& yum remove ruby193-rubygem-foreman_openscap -y
 		'
 	build_and_deploy_scl $project $server
 	ssh root@$server '
