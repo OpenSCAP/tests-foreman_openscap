@@ -16,12 +16,13 @@ function clone_foreman_spawn(){
 	popd
 }
 
-function deploy_foreman17(){
+function deploy_foreman17_start(){
 	cd $ghdir/lzap/bin-public
-	./virt-spawn --force -n $vmname -- "FOREMAN_REPO=releases/1.7"
-	host=$vmname.local.lan
-	# wait for the installation to finish
-	ssh root@host 'tail -f virt-sysprep-firstboot.log | grep "collect important logs"'
+	./virt-spawn --force -n $1 -- "FOREMAN_REPO=releases/1.7"
+}
+
+function deploy_foreman17_wait(){
+	ssh root@$1 'tail -f virt-sysprep-firstboot.log | grep "collect important logs"'
 }
 
 function patch_foreman17(){
