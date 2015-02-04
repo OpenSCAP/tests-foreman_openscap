@@ -67,7 +67,7 @@ function copy_gem_to(){
 function deploy_scaptimony(){
 	local project=scaptimony
 	local server=$1
-	pushd $ghdir/$project
+	pushd $ghdir/openscap/$project
 	copy_gem_to $project $server
 	build_and_deploy_scl $project $server
 	popd
@@ -76,7 +76,7 @@ function deploy_scaptimony(){
 function deploy_foreman_openscap(){
 	local project=foreman_openscap
 	local server=$1
-	pushd $ghdir/$project
+	pushd $ghdir/openscap/$project
 	copy_gem_to $project $server
 	ssh root@$server '
 		(rpm -q foreman-assets || yum install -y foreman-assets)
@@ -91,7 +91,7 @@ function deploy_foreman_openscap(){
 function deploy_smart_proxy_openscap(){
 	local project=smart_proxy_openscap
 	local server=$1
-	pushd $ghdir/$project
+	pushd $ghdir/openscap/$project
 	copy_gem_to $project $server
 	ssh root@$server '
 		   (rpm -q ruby193-rubygems-devel && yum remove -y ruby193-rubygems-devel) \
@@ -107,7 +107,7 @@ function deploy_smart_proxy_openscap(){
 function deploy_foreman_scap_client(){
 	local project=foreman_scap_client
 	local server=$1
-	pushd $ghdir/$project
+	pushd $ghdir/openscap/$project
 	copy_gem_to $project $server
 	build_and_deploy $project $server
 	popd
@@ -116,7 +116,7 @@ function deploy_foreman_scap_client(){
 function deploy_puppet_foreman_scap_client(){
 	local project="puppet-foreman_scap_client"
 	local server=$1
-	pushd $ghdir/$project
+	pushd $ghdir/openscap/$project
 	puppet module build .
 	ssh root@$server 'mkdir '$project
 	scp -r $project-*.gem root@$server:$project/
