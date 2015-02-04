@@ -119,7 +119,7 @@ function deploy_puppet_foreman_scap_client(){
 	local server=$1
 	pushd $ghdir/openscap/$project
 	puppet module build .
-	ssh root@$server 'mkdir '$project
+	ssh root@$server 'mkdir -p '$project
 	scp -r $project-*.gem root@$server:$project/
 	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
 	ssh root@$server '
