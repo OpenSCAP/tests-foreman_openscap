@@ -4,6 +4,16 @@ function local_requires(){
 	for pkg in virt-install libguestfs-tools-c rubygems puppet; do
 		rpm -q --quiet $pkg || sudo yum install -y $pkg
 	done
+	clone_foreman_spawn
+}
+
+function clone_foreman_spawn(){
+	[ -d $ghdir/lzap/bin-public ] && return
+	pushd $ghdir
+	mkdir -p lzap
+	cd lzap
+	git clone https://github.com/lzap/bin-public.git
+	popd
 }
 
 function deploy_foreman17(){
