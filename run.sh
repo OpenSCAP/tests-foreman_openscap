@@ -14,13 +14,17 @@ function deploy_foreman17(){
 	ssh root@host 'tail -f virt-sysprep-firstboot.log | grep "collect important logs"'
 }
 
-deploy_foreman17
+function deploy_rubygem_openscap(){
+	ssh root@$host '
+		cd /etc/yum.repos.d/ \
+		&& wget https://copr.fedoraproject.org/coprs/isimluk/OpenSCAP/repo/epel-6/isimluk-OpenSCAP-epel-6.repo \
+		&& yum install openscap-utils ruby193-rubygem-openscap -y \
+		'
+}
 
-ssh root@$host '
-	cd /etc/yum.repos.d/ \
-	&& wget https://copr.fedoraproject.org/coprs/isimluk/OpenSCAP/repo/epel-6/isimluk-OpenSCAP-epel-6.repo \
-	&& yum install openscap-utils ruby193-rubygem-openscap -y \
-'
+deploy_foreman17
+deploy_rubygem_openscap
+
 scp $ghdir/theforeman/foreman/0001-Fixes-8052-allows-erb-in-array-and-hash-params.patch root@$host:
 ssh root@$host '
 	cd ~foreman \
