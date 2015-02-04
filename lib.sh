@@ -16,6 +16,23 @@ function clone_foreman_spawn(){
 	popd
 }
 
+function clone_upstreams(){
+	pushd $ghdir
+	mkdir -p openscap
+	cd openscap
+	[ -d scaptimony ] || git clone https://github.com/OpenSCAP/scaptimony.git
+	[ -d foreman_openscap ] || git clone https://github.com/OpenSCAP/foreman_openscap.git
+	[ -d smart_proxy_openscap ] || git clone https://github.com/OpenSCAP/smart_proxy_openscap.git
+	[ -d foreman_scap_client ] || git clone https://github.com/OpenSCAP/foreman_scap_client.git
+	[ -d puppet-foreman_scap_client ] || git clone https://github.com/OpenSCAP/puppet-foreman_scap_client.git
+	cd ..
+	mkdir -p theforeman
+	cd theforeman
+	[ -d foreman-packaging ] || git clone -b rpm/develop https://github.com/theforeman/foreman-packaging.git
+	[ -d foreman ] || git clone -b develop https://github.com/theforeman/foreman.git
+	popd
+}
+
 function deploy_foreman17_start(){
 	cd $ghdir/lzap/bin-public
 	./virt-spawn --force -n $1 -- "FOREMAN_REPO=releases/1.7"
