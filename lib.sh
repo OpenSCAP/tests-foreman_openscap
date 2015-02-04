@@ -121,7 +121,13 @@ function deploy_puppet_foreman_scap_client(){
 	ssh root@$server 'mkdir '$project
 	scp -r $project-*.gem root@$server:$project/
 	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
-	build_and_deploy $project $server
+	ssh root@$server '
+		   cd '$project' \
+		&& rm -rf ~/rpmbuild \
+		&& yum-builddep -y '$project'.spec \
+		&& rpmbuild  --define "_sourcedir `pwd`" -ba '$project'.spec \
+		&& rpm -Uvh --force ~/rpmbuild/RPMS/noarch/'$project'-*.noarch.rpm
+		'
 	popd
 }
 
