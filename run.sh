@@ -5,8 +5,13 @@ set -e -o pipefail
 ghdir="~/data/redhat/git/hub"
 vmname=foreman17test
 
+function local_requires(){
+	for pkg in virt-install libguestfs-tools-c
+		rpm -q --quiet $pkg || yum install -y $pkg
+	done
+}
+
 function deploy_foreman17(){
-	sudo yum install virt-install libguestfs-tools-c -y
 	cd $ghdir/lzap/bin-public
 	./virt-spawn --force -n $vmname -- "FOREMAN_REPO=releases/1.7"
 	host=$vmname.local.lan
@@ -35,6 +40,7 @@ function deploy_scaptimony(){
 	./deploy $host
 }
 
+local_requires
 deploy_foreman17
 patch_foreman17
 deploy_rubygem_openscap
