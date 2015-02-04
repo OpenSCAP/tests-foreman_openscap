@@ -30,12 +30,16 @@ function deploy_rubygem_openscap(){
 		'
 }
 
+function deploy_scaptimony(){
+	cd $ghdir/scaptimony
+	./deploy $host
+}
+
 deploy_foreman17
 patch_foreman17
 deploy_rubygem_openscap
+deploy_scaptimony
 
-cd $ghdir/scaptimony
-./deploy $host
 cd ../foreman_openscap
 ./deploy $host
 cd ../smart_proxy_openscap
