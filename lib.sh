@@ -2,7 +2,7 @@
 
 function local_requires(){
 	for pkg in virt-install libguestfs-tools-c rubygems puppet; do
-		rpm -q --quiet $pkg || yum install -y $pkg
+		rpm -q --quiet $pkg || sudo yum install -y $pkg
 	done
 }
 
