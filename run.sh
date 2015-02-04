@@ -3,11 +3,19 @@ set -x
 set -e -o pipefail
 
 ghdir="~/data/redhat/git/hub"
+vmname=foreman17test
 
-cd $ghdir/lzap/bin-public
-./virt-spawn --force -n foreman17 --  "FOREMAN_REPO=releases/1.7"
-bash
-host=foreman17.local.lan
+function deploy_foreman17(){
+	sudo yum install virt-install libguestfs-tools-c -y
+	cd $ghdir/lzap/bin-public
+	./virt-spawn --force -n $vmname -- "FOREMAN_REPO=releases/1.7"
+	host=$vmname.local.lan
+	# wait for the installation to finish
+	ssh root@host 'tail -f virt-sysprep-firstboot.log | grep "collect important logs"'
+}
+
+deploy_foreman17
+
 ssh root@$host '
 	cd /etc/yum.repos.d/ \
 	&& wget https://copr.fedoraproject.org/coprs/isimluk/OpenSCAP/repo/epel-6/isimluk-OpenSCAP-epel-6.repo \
