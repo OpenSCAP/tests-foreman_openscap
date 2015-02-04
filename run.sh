@@ -35,6 +35,17 @@ function deploy_rubygem_openscap(){
 		'
 }
 
+function build_and_deploy(){
+	local project=$1
+	local server=$2
+	ssh root@$server '
+		   cd '$project' \
+		&& rm -rf ~/rpmbuild \
+		&& rpmbuild  --define "_sourcedir `pwd`" -ba rubygem-'$project'.spec \
+		&& rpm -Uvh --force ~/rpmbuild/RPMS/noarch/rubygem-'$project'-*.noarch.rpm
+		'
+}
+
 function build_and_deploy_scl(){
 	local project=$1
 	local server=$2
@@ -71,7 +82,7 @@ function deploy_foreman_openscap(){
 	local project=foreman_openscap
 	local server=$1
 	pushd $ghdir/$project
-	copy_get_to $project
+	copy_gem_to $project $server
 	ssh root@$server '
 		(rpm -q foreman-assets || yum install -y foreman-assets)
 		'
@@ -82,15 +93,28 @@ function deploy_foreman_openscap(){
 	popd
 }
 
+function deploy_smart_proxy_openscap(){
+	local project=smart_proxy_openscap
+	local server=$1
+	copy_gem_to $project $server
+	ssh root@$server '
+		   (rpm -q ruby193-rubygems-devel && yum remove -y ruby193-rubygems-devel) \
+		&& yum-builddep -y ~/'$project'/rubygem-'$project'.spec
+		'
+	build_and_deploy $project $server
+	ssh root@$server '
+		service foreman-proxy restart
+		'
+}
+
 local_requires
 deploy_foreman17
 patch_foreman17
 deploy_rubygem_openscap
 deploy_scaptimony $host
 deploy_foreman_openscap $host
+deploy_smart_proxy_openscap $host
 
-cd ../smart_proxy_openscap
-./deploy $host
 cd ../foreman_scap_client
 ./deploy $host
 cd ../puppet-foreman_scap_client
