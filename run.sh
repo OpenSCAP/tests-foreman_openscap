@@ -6,7 +6,7 @@ ghdir="~/data/redhat/git/hub"
 vmname=foreman17test
 
 function local_requires(){
-	for pkg in virt-install libguestfs-tools-c
+	for pkg in virt-install libguestfs-tools-c rubygems
 		rpm -q --quiet $pkg || yum install -y $pkg
 	done
 }
