@@ -50,7 +50,17 @@ function deploy_foreman17_start(){
 }
 
 function deploy_foreman17_wait(){
-	ssh root@$1 'tail -f virt-sysprep-firstboot.log | grep "collect important logs"'
+	ssh root@$1 '
+		set -x ; \
+		( tail -f virt-sysprep-firstboot.log & echo $! >pid) | \
+			while read line; do
+				echo $line
+				if echo $line | grep "collect important logs"; then
+					echo "foreman is ready"
+					kill $(<pid)
+				fi
+			done
+		'
 }
 
 function patch_foreman17(){
