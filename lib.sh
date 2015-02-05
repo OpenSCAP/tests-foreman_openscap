@@ -71,6 +71,7 @@ function patch_foreman17(){
 	scp $ghdir/theforeman/foreman/0001* root@$host:
 	popd
 	ssh root@$host '
+		rpm -q patch || yum install patch -y; \
 		cd ~foreman \
 		&& patch -p1 ~/0001*
 		'
