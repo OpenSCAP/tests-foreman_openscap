@@ -50,8 +50,10 @@ function deploy_foreman17_start(){
 }
 
 function deploy_foreman17_wait(){
+	while ! ssh root@$1 'true'; do
+		sleep 10
+	done
 	ssh root@$1 '
-		set -x ; \
 		( tail -f virt-sysprep-firstboot.log & echo $! >pid) | \
 			while read line; do
 				echo $line
