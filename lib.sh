@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function local_requires(){
-	for pkg in virt-install libguestfs-tools-c rubygems puppet; do
+	for pkg in virt-install libguestfs-tools-c rubygems puppet fortune-mod; do
 		rpm -q --quiet $pkg || sudo yum install -y $pkg
 	done
 	sudo service libvirtd start
