@@ -4,6 +4,8 @@ function local_requires(){
 	for pkg in virt-install libguestfs-tools-c rubygems puppet; do
 		rpm -q --quiet $pkg || sudo yum install -y $pkg
 	done
+	sudo service libvirtd start
+	sudo mkdir -p /root/.cache/virt-builder
 	clone_foreman_spawn
 }
 
