@@ -38,6 +38,15 @@ function clone_upstreams(){
 function deploy_foreman17_start(){
 	cd $ghdir/lzap/bin-public
 	./virt-spawn --force -n $1 -- "FOREMAN_REPO=releases/1.7"
+	local hostname="$1.local.lan"
+	local ip=`sudo virsh net-dumpxml --network default | xmllint --xpath "string(/network/ip/dhcp/host[@name='${hostname}']/@ip)" -`
+	cp /etc/hosts /tmp
+	sudo sh -c "grep -v $hostname /tmp/hosts > /etc/hosts"
+	echo "$ip $hostname"
+	sudo sh -c "echo '$ip $hostname' >> /etc/hosts"
+	while ! ping -c 1 $hostname; do
+		sleep 10
+	done
 }
 
 function deploy_foreman17_wait(){
