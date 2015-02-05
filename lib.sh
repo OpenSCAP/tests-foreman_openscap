@@ -50,6 +50,7 @@ function deploy_foreman17_start(){
 }
 
 function deploy_foreman17_wait(){
+	sed -i 's/^'$1',.*$//g' ~/.ssh/known_hosts
 	while ! ssh root@$1 'true'; do
 		sleep 10
 	done
