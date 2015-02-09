@@ -170,6 +170,15 @@ function deploy_foreman_scap_client(){
 	popd
 }
 
+function workaround_packaging_513(){
+	# https://github.com/theforeman/foreman-packaging/pull/513
+	pushd ../../theforeman/foreman-packaging
+	git remote | grep -v isimluk || git remote add isimluk https://github.com/isimluk/foreman-packaging
+	git fetch isimluk
+	git checkout isimluk/puppet-foreman_scap_client
+	popd
+}
+
 function deploy_puppet_foreman_scap_client(){
 	local project="puppet-foreman_scap_client"
 	local server=$1
@@ -178,7 +187,8 @@ function deploy_puppet_foreman_scap_client(){
 	puppet module build .
 	ssh root@$server 'mkdir -p '$project
 	scp -r ./pkg/*.tar.gz root@$server:$project/
-	scp -r $ghdir/theforeman/foreman-packaging/rubygem-$project/rubygem-${project}.spec root@$server:$project/
+	workaround_packaging_513
+	scp -r $ghdir/theforeman/foreman-packaging/$project/${project}.spec root@$server:$project/
 	ssh root@$server '
 		   cd '$project' \
 		&& rm -rf ~/rpmbuild \
