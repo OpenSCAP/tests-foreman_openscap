@@ -74,7 +74,7 @@ function patch_foreman17(){
 	ssh root@$host '
 		rpm -q patch || yum install patch -y \
 		&& cd ~foreman \
-		&& patch -p1 ~/0001*
+		&& patch -p1 < ~/0001*
 		'
 }
 
