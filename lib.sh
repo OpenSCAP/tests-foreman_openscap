@@ -22,11 +22,9 @@ function clone_upstreams(){
 	pushd $ghdir
 	mkdir -p openscap
 	cd openscap
-	[ -d scaptimony ] || git clone https://github.com/OpenSCAP/scaptimony.git
-	[ -d foreman_openscap ] || git clone https://github.com/OpenSCAP/foreman_openscap.git
-	[ -d smart_proxy_openscap ] || git clone https://github.com/OpenSCAP/smart_proxy_openscap.git
-	[ -d foreman_scap_client ] || git clone https://github.com/OpenSCAP/foreman_scap_client.git
-	[ -d puppet-foreman_scap_client ] || git clone https://github.com/OpenSCAP/puppet-foreman_scap_client.git
+	for proj in scaptimony foreman_openscap smart_proxy_openscap foreman_scap_client puppet-foreman_scap_client; do
+		[ -d $proj ] || git clone https://github.com/OpenSCAP/${proj}.git
+	done
 	cd ..
 	mkdir -p theforeman
 	cd theforeman
