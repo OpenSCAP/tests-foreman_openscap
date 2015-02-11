@@ -194,6 +194,7 @@ function deploy_puppet_foreman_scap_client(){
 		&& rm -rf ~/rpmbuild \
 		&& yum-builddep -y '$project'.spec \
 		&& rpmbuild  --define "_sourcedir `pwd`" -ba '$project'.spec \
+		&& (rpm -q puppetlabs-stdlib) || yum install -y puppetlabs-stdlib \
 		&& rpm -Uvh --force ~/rpmbuild/RPMS/noarch/'$project'-*.noarch.rpm
 		'
 	popd
