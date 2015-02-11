@@ -6,7 +6,14 @@ function local_requires(){
 	done
 	service libvirtd status || sudo service libvirtd start
 	sudo mkdir -p /root/.cache/virt-builder
-	clone_foreman_spawn
+	clone_foreman_spawn &
+	ensure_sshkey &
+	wait
+}
+
+function ensure_sshkey(){
+	local keyfile="$HOME/.ssh/id_rsa.pub"
+	[ -f $keyfile ] || ssh-keygen -f $keyfile -t rsa -N ""
 }
 
 function clone_foreman_spawn(){
