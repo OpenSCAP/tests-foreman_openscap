@@ -173,7 +173,7 @@ function deploy_foreman_scap_client(){
 function workaround_packaging_513(){
 	# https://github.com/theforeman/foreman-packaging/pull/513
 	pushd ../../theforeman/foreman-packaging
-	git remote | grep -v isimluk || git remote add isimluk https://github.com/isimluk/foreman-packaging
+	git remote | grep -q isimluk || git remote add isimluk https://github.com/isimluk/foreman-packaging
 	git fetch isimluk
 	git checkout isimluk/puppet-foreman_scap_client
 	popd
