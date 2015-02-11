@@ -13,8 +13,8 @@ host=${vmname}.local.lan
 local_requires
 deploy_foreman17_start $vmname
 clone_upstreams & deploy_foreman17_wait $host
-patch_foreman17
-deploy_rubygem_openscap
+patch_foreman17 $host
+deploy_rubygem_openscap $host
 deploy_scaptimony $host
 deploy_foreman_openscap $host
 deploy_smart_proxy_openscap $host

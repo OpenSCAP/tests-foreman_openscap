@@ -67,11 +67,12 @@ function deploy_foreman17_wait(){
 }
 
 function patch_foreman17(){
+	local server=$1
 	pushd $ghdir/theforeman/foreman/
 	git format-patch f8a56f5bd809305080e4^..f8a56f5bd809305080e4
-	scp $ghdir/theforeman/foreman/0001* root@$host:
+	scp $ghdir/theforeman/foreman/0001* root@$server:
 	popd
-	ssh root@$host '
+	ssh root@$server '
 		rpm -q patch || yum install patch -y \
 		&& cd ~foreman \
 		&& patch -p1 < ~/0001* | grep succeeded
@@ -79,7 +80,8 @@ function patch_foreman17(){
 }
 
 function deploy_rubygem_openscap(){
-	ssh root@$host '
+	local server=$1
+	ssh root@$server '
 		cd /etc/yum.repos.d/ \
 		&& wget https://copr.fedoraproject.org/coprs/isimluk/OpenSCAP/repo/epel-6/isimluk-OpenSCAP-epel-6.repo \
 		&& yum install openscap-utils ruby193-rubygem-openscap -y \
