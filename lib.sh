@@ -141,6 +141,20 @@ function deploy_scaptimony(){
 	popd
 }
 
+function workaround_packaging_foreman_openscap_032(){
+	pushd ../../theforeman/foreman-packaging
+	git remote | grep -q isimluk || git remote add isimluk https://github.com/isimluk/foreman-packaging
+	git fetch isimluk
+	git checkout isimluk/foreman_openscap
+	popd
+}
+
+function workaround_packaging_foreman_openscap_032_end(){
+	pushd ../../theforeman/foreman-packaging
+	git checkout rpm/develop
+	popd
+}
+
 function deploy_foreman_openscap(){
 	local project=foreman_openscap
 	local server=$1
@@ -150,7 +164,9 @@ function deploy_foreman_openscap(){
 		   (rpm -q foreman-assets || yum install -y foreman-assets) \
 		&& yum remove ruby193-rubygem-foreman_openscap -y
 		'
+	workaround_packaging_foreman_openscap_032
 	build_and_deploy_scl $project $server
+	workaround_packaging_foreman_openscap_032_end
 	ssh root@$server '
 		service foreman restart
 		'
