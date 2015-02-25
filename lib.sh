@@ -6,9 +6,7 @@ function local_requires(){
 	done
 	service libvirtd status || sudo service libvirtd start
 	sudo mkdir -p /root/.cache/virt-builder
-	clone_foreman_spawn &
-	ensure_sshkey &
-	wait
+	clone_foreman_spawn
 }
 
 function ensure_sshkey(){
