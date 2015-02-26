@@ -23,3 +23,4 @@ deploy_smart_proxy_openscap $host
 deploy_foreman_scap_client $host
 deploy_puppet_foreman_scap_client $host
 
+test_ensure_no_scap_content $host
