@@ -233,6 +233,11 @@ function deploy_puppet_foreman_scap_client(){
 	popd
 }
 
+function test_foreman_openscap(){
+	local server=$1
+	test_ensure_no_scap_content $server
+}
+
 function test_ensure_no_scap_content(){
 	local server=$1
 	local json=`mktemp`
