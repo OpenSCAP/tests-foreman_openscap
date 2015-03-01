@@ -173,10 +173,16 @@ function deploy_foreman_openscap(){
 	popd
 }
 
+function workaround_authentication_for_17(){
+	git checkout maint-foreman17
+}
+
+
 function deploy_smart_proxy_openscap(){
 	local project=smart_proxy_openscap
 	local server=$1
 	pushd $ghdir/openscap/$project
+	workaround_authentication_for_17
 	copy_gem_to $project $server
 	ssh root@$server '
 		   (rpm -q ruby193-rubygems-devel && yum remove -y ruby193-rubygems-devel)
