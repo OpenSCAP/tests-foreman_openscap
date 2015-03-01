@@ -236,9 +236,19 @@ function deploy_puppet_foreman_scap_client(){
 function test_foreman_openscap(){
 	local server=$1
 	test_ensure_no_scap_content $server
+	test_ensure_no_policy $server
 }
 
 function test_ensure_no_scap_content(){
+	local server=$1
+	local json=`mktemp`
+	curl -k -u admin:admin -H "Accept: version=2,application/json" https://$server/api/policies > $json
+	grep '"total": 0' $json
+	grep '"subtotal": 0' $json
+	rm $json
+}
+
+function test_ensure_no_policy(){
 	local server=$1
 	local json=`mktemp`
 	curl -k -u admin:admin -H "Accept: version=2,application/json" https://$server/api/scap_contents > $json
