@@ -15,7 +15,6 @@ deploy_foreman_nightly_start $vmname
 ensure_sshkey_exists &
 clone_upstreams &
 deploy_foreman_wait $host
-patch_foreman17 $host
 deploy_rubygem_openscap $host
 deploy_scaptimony $host
 deploy_foreman_openscap $host

@@ -75,19 +75,6 @@ function deploy_foreman_wait(){
 		'
 }
 
-function patch_foreman17(){
-	local server=$1
-	pushd $ghdir/theforeman/foreman/
-	git format-patch f8a56f5bd809305080e4^..f8a56f5bd809305080e4
-	scp $ghdir/theforeman/foreman/0001* root@$server:
-	popd
-	ssh root@$server '
-		rpm -q patch || yum install patch -y \
-		&& cd ~foreman \
-		&& patch -p1 < ~/0001* | grep succeeded
-		'
-}
-
 function deploy_rubygem_openscap(){
 	local server=$1
 	ssh root@$server '
