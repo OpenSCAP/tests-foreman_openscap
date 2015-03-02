@@ -44,9 +44,9 @@ function clone_upstreams(){
 	popd
 }
 
-function deploy_foreman17_start(){
+function deploy_foreman_nightly_start(){
 	cd $ghdir/lzap/bin-public
-	./virt-spawn --force -n $1 -- "FOREMAN_REPO=releases/1.7"
+	./virt-spawn --force -n $1 -- "FOREMAN_REPO=nightly"
 	local hostname="$1.local.lan"
 	local ip=`sudo virsh net-dumpxml --network default | xmllint --xpath "string(/network/ip/dhcp/host[@name='${hostname}']/@ip)" -`
 	cp /etc/hosts /tmp
@@ -58,7 +58,7 @@ function deploy_foreman17_start(){
 	done
 }
 
-function deploy_foreman17_wait(){
+function deploy_foreman_wait(){
 	sed -i 's/^'$1',.*$//g' ~/.ssh/known_hosts
 	while ! ssh -o StrictHostKeyChecking=no root@$1 'true'; do
 		sleep 10
