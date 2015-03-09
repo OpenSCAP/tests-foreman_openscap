@@ -25,4 +25,3 @@ deploy_puppet_foreman_scap_client $host
 
 import_puppet_foreman_scap_client $host
 
-test_foreman_openscap $host
