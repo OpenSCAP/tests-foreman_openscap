@@ -211,7 +211,7 @@ function import_puppet_foreman_scap_client(){
 	curl -k -u admin:admin -H 'Accept: version=2,application/json' https://$server/api/smart_proxies > $json
 	proxy_id=`json_path $json '["results"][0]["id"]'`
 	curl -k -u admin:admin -H "Accept: version=2,application/json" -H "Content-Type: application/json" -X POST \
-		https://foreman17test.local.lan/api/v2/smart_proxies/$proxy_id/import_puppetclasses > $json
+		https://$server/api/v2/smart_proxies/$proxy_id/import_puppetclasses > $json
 	json_path $json '["results"][0]["new_puppetclasses"]' | grep foreman_scap_client
 	json_path $json '["results"][1]["new_puppetclasses"]' | grep foreman_scap_client
 }
