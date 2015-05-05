@@ -225,7 +225,7 @@ function test_foreman_openscap(){
 function test_ensure_no_scap_content(){
 	local server=$1
 	local json=`mktemp`
-	curl -k -u admin:admin -H "Accept: version=2,application/json" https://$server/api/policies > $json
+	curl -k -u admin:admin -H "Accept: version=2,application/json" https://$server/api/v2/compliance/policies > $json
 	grep '"total": 0' $json
 	grep '"subtotal": 0' $json
 	rm $json
@@ -234,7 +234,7 @@ function test_ensure_no_scap_content(){
 function test_ensure_no_policy(){
 	local server=$1
 	local json=`mktemp`
-	curl -k -u admin:admin -H "Accept: version=2,application/json" https://$server/api/scap_contents > $json
+	curl -k -u admin:admin -H "Accept: version=2,application/json" https://$server/api/v2/compliance/scap_contents > $json
 	grep '"total": 0' $json
 	grep '"subtotal": 0' $json
 	rm $json
