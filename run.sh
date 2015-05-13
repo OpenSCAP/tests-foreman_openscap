@@ -11,8 +11,8 @@ vmname=foreman-nightly
 host=${vmname}.local.lan
 
 local_requires
+ensure_sshkey_exists
 deploy_foreman_nightly_start $vmname
-ensure_sshkey_exists &
 clone_upstreams &
 deploy_foreman_wait $host
 deploy_rubygem_openscap $host
