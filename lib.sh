@@ -10,7 +10,7 @@ function local_requires(){
 }
 
 function ensure_sshkey_exists(){
-	local keyfile="$HOME/.ssh/id_rsa.pub"
+	local keyfile="$HOME/.ssh/id_rsa"
 	[ -f $keyfile ] || ssh-keygen -f $keyfile -t rsa -N ""
 }
 
