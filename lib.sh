@@ -59,7 +59,7 @@ function deploy_foreman_nightly_start(){
 }
 
 function deploy_foreman_wait(){
-	sed -i 's/^'$1',.*$//g' ~/.ssh/known_hosts
+	[ -f ~/.ssh/known_hosts ] && sed -i 's/^'$1',.*$//g' ~/.ssh/known_hosts
 	while ! ssh -o StrictHostKeyChecking=no root@$1 'true'; do
 		sleep 10
 	done
