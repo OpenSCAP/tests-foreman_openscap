@@ -9,7 +9,7 @@ function local_requires(){
 	clone_foreman_spawn
 }
 
-function ensure_sshkey(){
+function ensure_sshkey_exists(){
 	local keyfile="$HOME/.ssh/id_rsa.pub"
 	[ -f $keyfile ] || ssh-keygen -f $keyfile -t rsa -N ""
 }
